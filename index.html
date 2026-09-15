@@ -235,45 +235,47 @@ document.getElementById("cartTotal").innerHTML=`
 }
 
 function placeOrder(){
-if(cart.length===0)return;
-let total=0;
-cart.forEach(item=>{
-let p=products.find(x=>x.id===item.id);
-total+=p.price*item.qty;
-});
-orders.unshift({
-id:"KA"+Date.now(),
-items:cart,
-total:total,
-date:new Date().toLocaleDateString("en-IN"),
-status:"Order Placed"
-});
-cart=[];
-save();
-renderCart();
-renderOrders();
-renderProducts();
-alert("Order successfully place ho gaya! 🎉");
-showPage("orders");
+  if(cart.length===0)return;
+
+  let total=0;
+
+  cart.forEach(item=>{
+    let p=products.find(x=>x.id===item.id);
+    total+=p.price*item.qty;
+  });
+
+  let profile=JSON.parse(localStorage.getItem("ka27profile")||"{}");
+
+  if(!profile.name || !profile.phone || !profile.address){
+    alert("Pehle Profile me Name, Mobile Number aur Delivery Address save karo 👤");
+    showPage("profile");
+    return;
+  }
+
+  orders.unshift({
+    id:"KA"+Date.now(),
+    items:cart,
+    total:total,
+    date:new Date().toLocaleDateString("en-IN"),
+    status:"Order Placed",
+    customer:{
+      name:profile.name,
+      phone:profile.phone,
+      address:profile.address
+    }
+  });
+
+  cart=[];
+  save();
+  renderCart();
+  renderOrders();
+  renderProducts();
+
+  alert("Order successfully place ho gaya! 📦");
+  showPage("orders");
+}
 }
 
-function renderOrders(){
-let box=document.getElementById("ordersList");
-if(orders.length===0){
-box.innerHTML='<div class="empty">📦<br><br>Abhi koi order nahi hai.</div>';
-return;
-}
-box.innerHTML=orders.map(o=>`
-<div class="card">
-<div class="row"><b>Order #${o.id}</b><span>${o.date}</span></div>
-<p>💰 Total: <b>₹${o.total}</b></p>
-<p style="color:#0b8f4d;margin-top:8px">✅ ${o.status}</p>
-</div>`).join("");
-}
-
-function showPage(id,btn){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(id).classList.add("active");
 
 document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
 if(btn)btn.classList.add("active");
