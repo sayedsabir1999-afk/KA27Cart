@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KA27Cart</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f5f7fa;
+  color:#172033;
+  padding-bottom:80px;
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.header{
+  background:#087c45;
+  color:white;
+  padding:18px 16px 22px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+}
+
+.location{
+  font-size:13px;
+  margin-top:6px;
+  opacity:.9;
+}
+
+.cartBtn{
+  background:white;
+  color:#087c45;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  font-size:22px;
+  position:relative;
+}
+
+.badge{
+  position:absolute;
+  right:-3px;
+  top:-3px;
+  background:#ff3b30;
+  color:white;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.search{
+  margin-top:18px;
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:0;
+  outline:none;
+  font-size:16px;
+}
+
+.container{
+  padding:16px;
+  max-width:900px;
+  margin:auto;
+}
+
+.banner{
+  background:linear-gradient(135deg,#087c45,#13a866);
+  color:white;
+  padding:22px;
+  border-radius:20px;
+  margin-bottom:20px;
+}
+
+.banner h1{
+  font-size:25px;
+  margin-bottom:8px;
+}
+
+.banner p{
+  font-size:14px;
+  line-height:1.5;
+}
+
+.sectionTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:20px 0 12px;
+}
+
+.sectionTitle h2{
+  font-size:20px;
+}
+
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding-bottom:5px;
+}
+
+.category{
+  min-width:90px;
+  background:white;
+  border-radius:15px;
+  padding:13px 8px;
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.category span{
+  font-size:25px;
+  display:block;
+  margin-bottom:6px;
+}
+
+.category small{
+  font-weight:bold;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.product{
+  background:white;
+  border-radius:18px;
+  padding:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
+}
+
+.productImage{
+  height:120px;
+  background:#f0f4f2;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:55px;
+  margin-bottom:10px;
+}
+
+.product h3{
+  font-size:16px;
+  margin-bottom:5px;
+}
+
+.product p{
+  color:#6b7280;
+  font-size:12px;
+  margin-bottom:8px;
+}
+
+.price{
+  font-size:18px;
+  font-weight:bold;
+  color:#087c45;
+}
+
+.add{
+  width:100%;
+  background:#087c45;
+  color:white;
+  padding:11px;
+  border-radius:11px;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+.add:active{
+  transform:scale(.97);
+}
+
+.empty{
+  text-align:center;
+  padding:35px 10px;
+  color:#777;
+}
+
+.cartPanel{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:30;
+}
+
+.cartBox{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-radius:24px 24px 0 0;
+  max-height:85vh;
+  overflow:auto;
+  padding:20px;
+}
+
+.cartHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.close{
+  background:#eee;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+}
+
+.cartItem{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
+}
+
+.cartEmoji{
+  width:55px;
+  height:55px;
+  background:#f0f4f2;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+}
+
+.cartInfo{
+  flex:1;
+}
+
+.cartInfo h4{
+  margin-bottom:4px;
+}
+
+.qty{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:7px;
+}
+
+.qty button{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  background:#e9f5ef;
+  color:#087c45;
+  font-weight:bold;
+}
+
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:20px;
+  font-weight:bold;
+  margin:20px 0;
+}
+
+.checkout{
+  width:100%;
+  padding:15px;
+  background:#087c45;
+  color:white;
+  border-radius:14px;
+  font-weight:bold;
+  font-size:16px;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:65px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -2px 12px rgba(0,0,0,.1);
+  z-index:20;
+}
+
+.nav{
+  text-align:center;
+  color:#555;
+  font-size:12px;
+}
+
+.nav.active{
+  color:#087c45;
+  font-weight:bold;
+}
+
+.nav div{
+  font-size:22px;
+  margin-bottom:2px;
+}
+
+@media(min-width:700px){
+  .products{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .productImage{
+    height:150px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="top">
+    <div>
+      <div class="logo">🛒 KA27Cart</div>
+      <div class="location">📍 Delivering in Karnataka</div>
+    </div>
+
+    <button class="cartBtn" onclick="openCart()">
+      🛒
+      <span class="badge" id="cartCount">0</span>
+    </button>
+  </div>
+
+  <input
+    class="search"
+    id="search"
+    type="text"
+    placeholder="Search products..."
+    oninput="searchProducts()"
+  >
+</header>
+
+<main class="container">
+
+  <section class="banner">
+    <h1>Fast. Smart. Local.</h1>
+    <p>
+      KA27Cart par apne local products aasani se dekho,
+      cart me add karo aur order place karo.
+    </p>
+  </section>
+
+  <div class="sectionTitle">
+    <h2>Categories</h2>
+  </div>
+
+  <div class="categories">
+    <button class="category" onclick="filterCategory('All')">
+      <span>🛍️</span>
+      <small>All</small>
+    </button>
+
+    <button class="category" onclick="filterCategory('Grocery')">
+      <span>🍚</span>
+      <small>Grocery</small>
+    </button>
+
+    <button class="category" onclick="filterCategory('Fruits')">
+      <span>🍎</span>
+      <small>Fruits</small>
+    </button>
+
+    <button class="category" onclick="filterCategory('Vegetables')">
+      <span>🥦</span>
+      <small>Vegetables</small>
+    </button>
+
+    <button class="category" onclick="filterCategory('Daily')">
+      <span>🏠</span>
+      <small>Daily Use</small>
+    </button>
+  </div>
+
+  <div class="sectionTitle">
+    <h2>Popular Products</h2>
+  </div>
+
+  <div class="products" id="products"></div>
+
+</main>
+
+<nav class="bottom">
+  <div class="nav active">
+    <div>🏠</div>
+    Home
+  </div>
+
+  <div class="nav" onclick="openCart()">
+    <div>🛒</div>
+    Cart
+  </div>
+
+  <div class="nav">
+    <div>📦</div>
+    Orders
+  </div>
+
+  <div class="nav">
+    <div>👤</div>
+    Profile
+  </div>
+</nav>
+
+<div class="cartPanel" id="cartPanel">
+  <div class="cartBox">
+
+    <div class="cartHead">
+      <h2>Your Cart</h2>
+      <button class="close" onclick="closeCart()">✕</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="total">
+      <span>Total</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+
+    <button class="checkout" onclick="checkout()">
+      Proceed to Checkout
+    </button>
+
+  </div>
+</div>
+
+<script>
+
+const products = [
+  {
+    id:1,
+    name:"Premium Rice",
+    category:"Grocery",
+    price:50,
+    unit:"1 kg",
+    emoji:"🍚"
+  },
+  {
+    id:2,
+    name:"Fresh Apples",
+    category:"Fruits",
+    price:120,
+    unit:"1 kg",
+    emoji:"🍎"
+  },
+  {
+    id:3,
+    name:"Fresh Bananas",
+    category:"Fruits",
+    price:60,
+    unit:"1 dozen",
+    emoji:"🍌"
+  },
+  {
+    id:4,
+    name:"Tomato",
+    category:"Vegetables",
+    price:40,
+    unit:"1 kg",
+    emoji:"🍅"
+  },
+  {
+    id:5,
+    name:"Potato",
+    category:"Vegetables",
+    price:35,
+    unit:"1 kg",
+    emoji:"🥔"
+  },
+  {
+    id:6,
+    name:"Onion",
+    category:"Vegetables",
+    price:45,
+    unit:"1 kg",
+    emoji:"🧅"
+  },
+  {
+    id:7,
+    name:"Cooking Oil",
+    category:"Grocery",
+    price:140,
+    unit:"1 litre",
+    emoji:"🫗"
+  },
+  {
+    id:8,
+    name:"Milk",
+    category:"Daily",
+    price:30,
+    unit:"500 ml",
+    emoji:"🥛"
+  }
+];
+
+let cart = [];
+
+function showProducts(list = products){
+
+  const box = document.getElementById("products");
+
+  if(list.length === 0){
+    box.innerHTML =
+      '<div class="empty">😔 Product nahi mila.</div>';
+    return;
+  }
+
+  box.innerHTML = list.map(p => `
+    <div class="product">
+
+      <div class="productImage">
+        ${p.emoji}
+      </div>
+
+      <h3>${p.name}</h3>
+
+      <p>${p.unit} • ${p.category}</p>
+
+      <div class="price">₹${p.price}</div>
+
+      <button class="add" onclick="addToCart(${p.id})">
+        + Add to Cart
+      </button>
+
+    </div>
+  `).join("");
+}
+
+function addToCart(id){
+
+  const product = products.find(p => p.id === id);
+
+  const existing = cart.find(item => item.id === id);
+
+  if(existing){
+    existing.qty++;
+  }else{
+    cart.push({
+      ...product,
+      qty:1
+    });
+  }
+
+  updateCart();
+
+  alert(product.name + " cart me add ho gaya ✅");
+}
+
+function updateCart(){
+
+  const count = cart.reduce(
+    (sum,item) => sum + item.qty,
+    0
+  );
+
+  document.getElementById("cartCount").textContent = count;
+
+  const box = document.getElementById("cartItems");
+
+  if(cart.length === 0){
+
+    box.innerHTML =
+      '<div class="empty">🛒 Cart abhi empty hai.</div>';
+
+    document.getElementById("cartTotal").textContent = "₹0";
+    return;
+  }
+
+  box.innerHTML = cart.map(item => `
+
+    <div class="cartItem">
+
+      <div class="cartEmoji">
+        ${item.emoji}
+      </div>
+
+      <div class="cartInfo">
+
+        <h4>${item.name}</h4>
+
+        <div>₹${item.price} × ${item.qty}</div>
+
+        <div class="qty">
+
+          <button onclick="changeQty(${item.id},-1)">
+            −
+          </button>
+
+          <b>${item.qty}</b>
+
+          <button onclick="changeQty(${item.id},1)">
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+      <b>₹${item.price * item.qty}</b>
+
+    </div>
+
+  `).join("");
+
+  const total = cart.reduce(
+    (sum,item) => sum + item.price * item.qty,
+    0
+  );
+
+  document.getElementById("cartTotal").textContent =
+    "₹" + total;
+}
+
+function changeQty(id,change){
+
+  const item = cart.find(i => i.id === id);
+
+  if(!item) return;
+
+  item.qty += change;
+
+  if(item.qty <= 0){
+    cart = cart.filter(i => i.id !== id);
+  }
+
+  updateCart();
+}
+
+function openCart(){
+
+  document.getElementById("cartPanel").style.display =
+    "block";
+
+  updateCart();
+}
+
+function closeCart(){
+
+  document.getElementById("cartPanel").style.display =
+    "none";
+}
+
+function searchProducts(){
+
+  const text =
+    document.getElementById("search")
+    .value
+    .toLowerCase();
+
+  const result = products.filter(p =>
+    p.name.toLowerCase().includes(text) ||
+    p.category.toLowerCase().includes(text)
+  );
+
+  showProducts(result);
+}
+
+function filterCategory(category){
+
+  if(category === "All"){
+    showProducts(products);
+    return;
+  }
+
+  const result = products.filter(
+    p => p.category === category
+  );
+
+  showProducts(result);
+}
+
+function checkout(){
+
+  if(cart.length === 0){
+    alert("Pehle cart me product add karo.");
+    return;
+  }
+
+  alert(
+    "Order checkout ke liye ready hai ✅\n\n" +
+    "Next step me hum address, payment aur order system add karenge."
+  );
+}
+
+showProducts();
+updateCart();
+
+</script>
+
+</body>
+</html>
