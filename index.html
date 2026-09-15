@@ -1,1 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KA27Cart - Fast. Smart. Local.</title>
 
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f7f8;
+  color:#172238;
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.top{
+  background:#078c44;
+  color:white;
+  padding:16px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.brand{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.brand h1{
+  margin:0;
+  font-size:25px;
+}
+
+.brand p{
+  margin:5px 0 0;
+  font-size:13px;
+}
+
+.cartbtn{
+  background:white;
+  color:#078c44;
+  padding:10px 14px;
+  border-radius:20px;
+  font-weight:bold;
+  position:relative;
+}
+
+.badge{
+  position:absolute;
+  right:-4px;
+  top:-5px;
+  background:#ff3b30;
+  color:white;
+  border-radius:50%;
+  min-width:20px;
+  height:20px;
+  text-align:center;
+  font-size:12px;
+  padding-top:3px;
+}
+
+.search{
+  margin-top:14px;
+  width:100%;
+  padding:13px 15px;
+  border-radius:18px;
+  border:0;
+  outline:0;
+}
+
+main{
+  padding:16px;
+  max-width:900px;
+  margin:auto;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.hero{
+  background:linear-gradient(135deg,#078c44,#056b36);
+  color:white;
+  padding:22px;
+  border-radius:22px;
+  margin-bottom:18px;
+}
+
+.hero h2{
+  margin:0 0 8px;
+}
+
+.hero p{
+  margin:0;
+  line-height:1.5;
+}
+
+h2{
+  margin-top:20px;
+}
+
+.cats{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+
+.cat{
+  min-width:120px;
+  background:white;
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+  box-shadow:0 2px 10px #ddd;
+}
+
+.cat div{
+  font-size:32px;
+  margin-bottom:7px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.card{
+  background:white;
+  border-radius:18px;
+  padding:12px;
+  box-shadow:0 2px 12px #ddd;
+}
+
+.pic{
+  height:130px;
+  background:#eef3f1;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:65px;
+}
+
+.card h3{
+  margin:12px 0 6px;
+}
+
+.price{
+  font-weight:bold;
+  font-size:18px;
+}
+
+.old{
+  text-decoration:line-through;
+  color:#888;
+  font-size:13px;
+  margin-left:5px;
+}
+
+.primary{
+  background:#078c44;
+  color:white;
+  padding:11px 14px;
+  border-radius:12px;
+  width:100%;
+  font-weight:bold;
+  margin-top:9px;
+}
+
+.secondary{
+  background:#eee;
+  color:#172238;
+  padding:10px 14px;
+  border-radius:12px;
+  width:100%;
+  margin-top:8px;
+}
+
+.back{
+  background:#078c44;
+  color:white;
+  padding:10px 15px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.menu{
+  display:grid;
+  gap:10px;
+}
+
+.menu button{
+  background:white;
+  text-align:left;
+  padding:15px;
+  border-radius:14px;
+  box-shadow:0 2px 8px #ddd;
+}
+
+.panel{
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 2px 12px #ddd;
+}
+
+.form input,
+.form textarea,
+.form select{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  margin:7px 0;
+}
+
+.empty{
+  text-align:center;
+  padding:35px;
+  color:#777;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #ddd;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:8px 4px;
+  z-index:99;
+}
+
+.bottom button{
+  background:white;
+  padding:7px 2px;
+  font-size:12px;
+}
+
+.bottom span{
+  display:block;
+  font-size:20px;
+}
+
+@media(max-width:500px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(min-width:700px){
+  .grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+body{
+  padding-bottom:70px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+
+  <div class="brand">
+    <div>
+      <h1>🛒 KA27Cart</h1>
+      <p>📍 Delivering in Karnataka</p>
+    </div>
+
+    <button class="cartbtn" onclick="showPage('cart')">
+      🛍️ Cart
+      <span class="badge" id="cartBadge">0</span>
+    </button>
+  </div>
+
+  <input
+    class="search"
+    id="searchInput"
+    placeholder="Search products..."
+    oninput="searchProducts(this.value)"
+  >
+
+</header>
+
+<main>
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+  <div class="hero">
+    <h2>Fast. Smart. Local.</h2>
+    <p>
+      KA27Cart par apne local products aasani se dekho,
+      cart me add karo aur order karo.
+    </p>
+    <p style="margin-top:10px">🚚 Fast local delivery</p>
+  </div>
+
+  <h2>Categories</h2>
+
+  <div class="cats">
+
+    <button class="cat" onclick="filterCat('All')">
+      <div>🛒</div>
+      <b>All</b>
+    </button>
+
+    <button class="cat" onclick="filterCat('Grocery')">
+      <div>🛍️</div>
+      <b>Grocery</b>
+    </button>
+
+    <button class="cat" onclick="filterCat('Fruits')">
+      <div>🍎</div>
+      <b>Fruits</b>
+    </button>
+
+    <button class="cat" onclick="filterCat('Vegetables')">
+      <div>🥕</div>
+      <b>Vegetables</b>
+    </button>
+
+    <button class="cat" onclick="filterCat('Dairy')">
+      <div>🥛</div>
+      <b>Dairy</b>
+    </button>
+
+  </div>
+
+  <h2 id="productTitle">Popular Products</h2>
+
+  <div class="grid" id="products"></div>
+
+</section>
+
+
+<!-- CATEGORIES -->
+<section id="categories" class="page">
+
+  <button class="back" onclick="showPage('home')">← Back</button>
+
+  <h2>All Categories</h2>
+
+  <div class="menu">
+
+    <button onclick="filterCat('Grocery')">
+      🛒 Grocery
+    </button>
+
+    <button onclick="filterCat('Fruits')">
+      🍎 Fruits
+    </button>
+
+    <button onclick="filterCat('Vegetables')">
+      🥕 Vegetables
+    </button>
+
+    <button onclick="filterCat('Dairy')">
+      🥛 Dairy
+    </button>
+
+    <button onclick="filterCat('Household')">
+      🏠 Household
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- SEARCH -->
+<section id="search" class="page">
+
+  <button class="back" onclick="showPage('home')">← Home</button>
+
+  <h2>Search Results</h2>
+
+  <div class="grid" id="searchResults"></div>
+
+</section>
+
+
+<!-- CART -->
+<section id="cart" class="page">
+
+  <button class="back" onclick="showPage('home')">← Home</button>
+
+  <h2>🛒 My Cart</h2>
+
+  <div id="cartItems"></div>
+
+  <div class="panel" style="margin-top:15px">
+    <h3>Total: ₹<span id="cartTotal">0</span></h3>
+
+    <button class="primary" onclick="checkout()">
+      Proceed to Checkout
+    </button>
+  </div>
+
+</section>
+
+
+<!-- ORDERS -->
+<section id="orders" class="page">
+
+  <button class="back" onclick="showPage('home')">← Home</button>
+
+  <h2>📦 My Orders</h2>
+
+  <div id="ordersList" class="panel">
+    <div class="empty">No orders yet.</div>
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+  <button class="back" onclick="showPage('home')">← Home</button>
+
+  <h2>👤 Profile</h2>
+
+  <div class="panel">
+    <h3 id="profileName">Guest User</h3>
+    <p id="profilePhone">Not logged in</p>
+  </div>
+
+  <div class="menu" style="margin-top:15px">
+
+    <button onclick="showPage('account')">
+      👤 Account
+    </button>
+
+    <button onclick="showPage('addresses')">
+      📍 My Addresses
+    </button>
+
+    <button onclick="showPage('wishlist')">
+      ❤️ Wishlist
+    </button>
+
+    <button onclick="showPage('orders')">
+      📦 My Orders
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ACCOUNT -->
+<section id="account" class="page">
+
+  <button class="back" onclick="showPage('profile')">← Back</button>
+
+  <h2>👤 Account</h2>
+
+  <div class="panel form">
+
+    <input id="nameInput" placeholder="Your name">
+
+    <input id="phoneInput" placeholder="Mobile number">
+
+    <button class="primary" onclick="saveProfile()">
+      Save Profile
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ADDRESSES -->
+<section id="addresses" class="page">
+
+  <button class="back" onclick="showPage('profile')">← Back</button>
+
+  <h2>📍 My Addresses</h2>
+
+  <div class="panel form">
+
+    <input id="addressInput" placeholder="Enter full address">
+
+    <input id="cityInput" placeholder="City">
+
+    <input id="pinInput" placeholder="PIN code">
+
+    <button class="primary" onclick="saveAddress()">
+      Save Address
+    </button>
+
+  </div>
+
+  <div id="savedAddress" style="margin-top:15px"></div>
+
+</section>
+
+
+<!-- WISHLIST -->
+<section id="wishlist" class="page">
+
+  <button class="back" onclick="showPage('profile')">← Back</button>
+
+  <h2>❤️ Wishlist</h2>
+
+  <div id="wishlistItems"></div>
+
+</section>
+
+
+<!-- CHECKOUT -->
+<section id="checkout" class="page">
+
+  <button class="back" onclick="showPage('cart')">← Back</button>
+
+  <h2>💳 Checkout</h2>
+
+  <div class="panel form">
+
+    <h3>Delivery Address</h3>
+
+    <textarea id="checkoutAddress" rows="3"
+      placeholder="Enter delivery address"></textarea>
+
+    <h3>Payment Method</h3>
+
+    <select id="paymentMethod">
+      <option value="COD">Cash on Delivery</option>
+      <option value="UPI">UPI</option>
+    </select>
+
+    <button class="primary" onclick="placeOrder()">
+      Place Order
+    </button>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- BOTTOM NAV -->
+<nav class="bottom">
+
+  <button onclick="showPage('home')">
+    <span>🏠</span>
+    Home
+  </button>
+
+  <button onclick="showPage('categories')">
+    <span>📂</span>
+    Categories
+  </button>
+
+  <button onclick="showPage('cart')">
+    <span>🛒</span>
+    Cart
+  </button>
+
+  <button onclick="showPage('profile')">
+    <span>👤</span>
+    Profile
+  </button>
+
+</nav>
+
+
+<script>
+
+const products = [
+
+  {
+    id:1,
+    name:"Rice 1 Kg",
+    category:"Grocery",
+    price:50,
+    mrp:60,
+    emoji:"🍚"
+  },
+
+  {
+    id:2,
+    name:"Rice 5 Kg",
+    category:"Grocery",
+    price:250,
+    mrp:300,
+    emoji:"🍚"
+  },
+
+  {
+    id:3,
+    name:"Basmati Rice 5 Kg",
+    category:"Grocery",
+    price:599,
+    mrp:750,
+    emoji:"🍚"
+  },
+
+  {
+    id:4,
+    name:"Fresh Apple 1 Kg",
+    category:"Fruits",
+    price:120,
+    mrp:150,
+    emoji:"🍎"
+  },
+
+  {
+    id:5,
+    name:"Fresh Banana",
+    category:"Fruits",
+    price:50,
+    mrp:60,
+    emoji:"🍌"
+  },
+
+  {
+    id:6,
+    name:"Fresh Tomato 1 Kg",
+    category:"Vegetables",
+    price:40,
+    mrp:50,
+    emoji:"🍅"
+  },
+
+  {
+    id:7,
+    name:"Milk 1 Litre",
+    category:"Dairy",
+    price:55,
+    mrp:60,
+    emoji:"🥛"
+  },
+
+  {
+    id:8,
+    name:"Toor Dal 1 Kg",
+    category:"Grocery",
+    price:140,
+    mrp:160,
+    emoji:"🫘"
+  }
+
+];
+
+
+let cart = JSON.parse(localStorage.getItem("ka27cart")) || [];
+
+let wishlist =
+  JSON.parse(localStorage.getItem("ka27wishlist")) || [];
+
+let orders =
+  JSON.parse(localStorage.getItem("ka27orders")) || [];
+
+
+function saveData(){
+
+  localStorage.setItem(
+    "ka27cart",
+    JSON.stringify(cart)
+  );
+
+  localStorage.setItem(
+    "ka27wishlist",
+    JSON.stringify(wishlist)
+  );
+
+  localStorage.setItem(
+    "ka27orders",
+    JSON.stringify(orders)
+  );
+
+}
+
+
+function showPage(page){
+
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
+
+  const selected = document.getElementById(page);
+
+  if(selected){
+    selected.classList.add("active");
+  }
+
+  window.scrollTo(0,0);
+
+  if(page === "cart"){
+    renderCart();
+  }
+
+  if(page === "orders"){
+    renderOrders();
+  }
+
+  if(page === "wishlist"){
+    renderWishlist();
+  }
+
+}
+
+
+function productHTML(p){
+
+  const inWish = wishlist.includes(p.id);
+
+  return `
+
+    <div class="card">
+
+      <div class="pic">
+        ${p.emoji}
+      </div>
+
+      <h3>${p.name}</h3>
+
+      <small>${p.category}</small>
+
+      <p>
+        <span class="price">₹${p.price}</span>
+        <span class="old">₹${p.mrp}</span>
+      </p>
+
+      <button class="primary"
+        onclick="addToCart(${p.id})">
+        Add to Cart
+      </button>
+
+      <button class="secondary"
+        onclick="toggleWishlist(${p.id})">
+        ${inWish ? "❤️ Saved" : "♡ Wishlist"}
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+function renderProducts(list = products){
+
+  const box = document.getElementById("products");
+
+  box.innerHTML = list.map(productHTML).join("");
+
+}
+
+
+function filterCat(category){
+
+  showPage("home");
+
+  let list;
+
+  if(category === "All"){
+    list = products;
+    document.getElementById("productTitle").innerText =
+      "Popular Products";
+  }else{
+
+    list = products.filter(
+      p => p.category === category
+    );
+
+    document.getElementById("productTitle").innerText =
+      category + " Products";
+  }
+
+  renderProducts(list);
+
+}
+
+
+function searchProducts(text){
+
+  text = text.trim().toLowerCase();
+
+  if(!text){
+
+    showPage("home");
+    renderProducts(products);
+    return;
+
+  }
+
+  const result = products.filter(p =>
+    p.name.toLowerCase().includes(text) ||
+    p.category.toLowerCase().includes(text)
+  );
+
+  showPage("search");
+
+  const box =
+    document.getElementById("searchResults");
+
+  if(result.length === 0){
+
+    box.innerHTML =
+      `<div class="empty">
+        ❌ Product not found
+      </div>`;
+
+  }else{
+
+    box.innerHTML =
+      result.map(productHTML).join("");
+
+  }
+
+}
+
+
+function addToCart(id){
+
+  const product =
+    products.find(p => p.id === id);
+
+  const existing =
+    cart.find(item => item.id === id);
+
+  if(existing){
+
+    existing.qty++;
+
+  }else{
+
+    cart.push({
+      id:product.id,
+      name:product.name,
+      price:product.price,
+      qty:1
+    });
+
+  }
+
+  saveData();
+  updateBadge();
+
+  alert(product.name + " cart me add ho gaya ✅");
+
+}
+
+
+function updateBadge(){
+
+  const count =
+    cart.reduce((sum,item) =>
+      sum + item.qty,0
+    );
+
+  document.getElementById("cartBadge").innerText =
+    count;
+
+}
+
+
+function renderCart(){
+
+  const box =
+    document.getElementById("cartItems");
+
+  if(cart.length === 0){
+
+    box.innerHTML =
+      `<div class="empty">
+        🛒 Cart empty hai
+      </div>`;
+
+    document.getElementById("cartTotal").innerText = "0";
+
+    return;
+
+  }
+
+  let total = 0;
+
+  box.innerHTML = cart.map(item => {
+
+    total += item.price * item.qty;
+
+    return `
+
+      <div class="panel" style="margin-bottom:10px">
+
+        <h3>${item.name}</h3>
+
+        <p>₹${item.price} × ${item.qty}</p>
+
+        <button
+          class="secondary"
+          onclick="changeQty(${item.id},-1)">
+          −
+        </button>
+
+        <button
+          class="secondary"
+          onclick="changeQty(${item.id},1)">
+          +
+        </button>
+
+        <button
+          class="secondary"
+          onclick="removeFromCart(${item.id})">
+          Remove
+        </button>
+
+      </div>
+
+    `;
+
+  }).join("");
+
+  document.getElementById("cartTotal").innerText =
+    total;
+
+}
+
+
+function changeQty(id,change){
+
+  const item =
+    cart.find(i => i.id === id);
+
+  if(!item) return;
+
+  item.qty += change;
+
+  if(item.qty <= 0){
+
+    cart =
+      cart.filter(i => i.id !== id);
+
+  }
+
+  saveData();
+  updateBadge();
+  renderCart();
+
+}
+
+
+function removeFromCart(id){
+
+  cart =
+    cart.filter(i => i.id !== id);
+
+  saveData();
+  updateBadge();
+  renderCart();
+
+}
+
+
+function toggleWishlist(id){
+
+  if(wishlist.includes(id)){
+
+    wishlist =
+      wishlist.filter(x => x !== id);
+
+  }else{
+
+    wishlist.push(id);
+
+  }
+
+  saveData();
+
+  renderProducts();
+
+  renderWishlist();
+
+}
+
+
+function renderWishlist(){
+
+  const box =
+    document.getElementById("wishlistItems");
+
+  const list =
+    products.filter(p => wishlist.includes(p.id));
+
+  if(list.length === 0){
+
+    box.innerHTML =
+      `<div class="empty">
+        ❤️ Wishlist empty hai
+      </div>`;
+
+    return;
+
+  }
+
+  box.innerHTML =
+    `<div class="grid">
+      ${list.map(productHTML).join("")}
+    </div>`;
+
+}
+
+
+function checkout(){
+
+  if(cart.length === 0){
+
+    alert("Pehle cart me product add karo.");
+
+    return;
+
+  }
+
+  showPage("checkout");
+
+}
+
+
+function placeOrder(){
+
+  if(cart.length === 0){
+
+    alert("Cart empty hai.");
+
+    return;
+
+  }
+
+  const address =
+    document.getElementById("checkoutAddress").value.trim();
+
+  const payment =
+    document.getElementById("paymentMethod").value;
+
+  if(!address){
+
+    alert("Delivery address enter karo.");
+
+    return;
+
+  }
+
+  const total =
+    cart.reduce(
+      (sum,item) =>
+        sum + item.price * item.qty,
+      0
+    );
+
+  const order = {
+
+    id:"KA27-" + Date.now(),
+
+    date:new Date().toLocaleString(),
+
+    items:[...cart],
+
+    total:total,
+
+    payment:payment,
+
+    address:address,
+
+    status:"Order Placed"
+
+  };
+
+  orders.unshift(order);
+
+  cart = [];
+
+  saveData();
+  updateBadge();
+
+  alert("Order successfully placed ✅");
+
+  showPage("orders");
+
+}
+
+
+function renderOrders(){
+
+  const box =
+    document.getElementById("ordersList");
+
+  if(orders.length === 0){
+
+    box.innerHTML =
+      `<div class="empty">
+        📦 No orders yet.
+      </div>`;
+
+    return;
+
+  }
+
+  box.innerHTML =
+    orders.map(order => `
+
+      <div class="panel"
+        style="margin-bottom:12px">
+
+        <h3>📦 ${order.id}</h3>
+
+        <p>
+          <b>Status:</b>
+          ${order.status}
+        </p>
+
+        <p>
+          <b>Total:</b>
+          ₹${order.total}
+        </p>
+
+        <p>
+          <b>Payment:</b>
+          ${order.payment}
+        </p>
+
+        <small>${order.date}</small>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+function saveProfile(){
+
+  const name =
+    document.getElementById("nameInput").value.trim();
+
+  const phone =
+    document.getElementById("phoneInput").value.trim();
+
+  if(!name || !phone){
+
+    alert("Name aur mobile number enter karo.");
+
+    return;
+
+  }
+
+  localStorage.setItem("ka27name",name);
+  localStorage.setItem("ka27phone",phone);
+
+  document.getElementById("profileName")
+    .innerText = name;
+
+  document.getElementById("profilePhone")
+    .innerText = phone;
+
+  alert("Profile saved ✅");
+
+  showPage("profile");
+
+}
+
+
+function loadProfile(){
+
+  const name =
+    localStorage.getItem("ka27name");
+
+  const phone =
+    localStorage.getItem("ka27phone");
+
+  if(name){
+
+    document.getElementById("profileName")
+      .innerText = name;
+
+  }
+
+  if(phone){
+
+    document.getElementById("profilePhone")
+      .innerText = phone;
+
+  }
+
+}
+
+
+function saveAddress(){
+
+  const address =
+    document.getElementById("addressInput").value.trim();
+
+  const city =
+    document.getElementById("cityInput").value.trim();
+
+  const pin =
+    document.getElementById("pinInput").value.trim();
+
+  if(!address || !city || !pin){
+
+    alert("Address complete enter karo.");
+
+    return;
+
+  }
+
+  const full =
+    address + ", " + city + " - " + pin;
+
+  localStorage.setItem(
+    "ka27address",
+    full
+  );
+
+  renderAddress();
+
+  alert("Address saved ✅");
+
+}
+
+
+function renderAddress(){
+
+  const address =
+    localStorage.getItem("ka27address");
+
+  const box =
+    document.getElementById("savedAddress");
+
+  if(address){
+
+    box.innerHTML = `
+
+      <div class="panel">
+
+        <h3>📍 Saved Address</h3>
+
+        <p>${address}</p>
+
+      </div>
+
+    `;
+
+  }else{
+
+    box.innerHTML = "";
+
+  }
+
+}
+
+
+/* START APP */
+
+renderProducts();
+
+updateBadge();
+
+loadProfile();
+
+renderAddress();
+
+</script>
+
+</body>
+</html>
