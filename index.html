@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KA27Cart</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7f6;
+      color: #17211b;
+      padding-bottom: 80px;
+    }
+
+    .header {
+      background: #0b8f4d;
+      color: white;
+      padding: 20px 16px;
+      border-radius: 0 0 24px 24px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .location {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .cart {
+      background: white;
+      color: #0b8f4d;
+      padding: 10px;
+      border-radius: 50%;
+      font-size: 20px;
+    }
+
+    .search {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      color: #777;
+      font-size: 15px;
+    }
+
+    .banner {
+      margin: 18px 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #ff9f1c, #ffb84d);
+      color: white;
+      border-radius: 20px;
+    }
+
+    .banner h2 {
+      margin-bottom: 8px;
+    }
+
+    .banner p {
+      font-size: 14px;
+    }
+
+    .section {
+      padding: 0 16px;
+      margin-top: 22px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      font-size: 19px;
+    }
+
+    .see {
+      color: #0b8f4d;
+      font-size: 14px;
+    }
+
+    .categories {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .category {
+      min-width: 85px;
+      background: white;
+      padding: 14px 8px;
+      text-align: center;
+      border-radius: 15px;
+      box-shadow: 0 2px 8px #00000010;
+    }
+
+    .category-icon {
+      font-size: 27px;
+      margin-bottom: 7px;
+    }
+
+    .category p {
+      font-size: 12px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 17px;
+      padding: 12px;
+      box-shadow: 0 2px 8px #00000010;
+    }
+
+    .product-image {
+      height: 115px;
+      background: #eef7f1;
+      border-radius: 13px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 55px;
+      margin-bottom: 10px;
+    }
+
+    .product h3 {
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .price {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .old-price {
+      color: #999;
+      text-decoration: line-through;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    .discount {
+      color: #0b8f4d;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .add {
+      width: 100%;
+      margin-top: 10px;
+      border: none;
+      background: #0b8f4d;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .delivery {
+      background: #17211b;
+      color: white;
+      padding: 18px;
+      border-radius: 18px;
+    }
+
+    .shop {
+      background: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px #00000010;
+    }
+
+    .bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px #00000015;
+    }
+
+    .nav {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+    }
+
+    .nav.active {
+      color: #0b8f4d;
+      font-weight: bold;
+    }
+
+    .nav-icon {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="top">
+      <div>
+        <div class="logo">KA27Cart</div>
+        <div class="location">📍 Bankapur • Haveri</div>
+      </div>
+      <div class="cart">🛒</div>
+    </div>
+
+    <div class="search">
+      🔍 Search products, shops...
+    </div>
+  </header>
+
+  <div class="banner">
+    <h2>KA27 AI 🧠</h2>
+    <p>Smart shopping made easy. Find products and local shops faster.</p>
+  </div>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Categories</h2>
+      <span class="see">See all</span>
+    </div>
+
+    <div class="categories">
+      <div class="category">
+        <div class="category-icon">🛒</div>
+        <p>Grocery</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">👕</div>
+        <p>Fashion</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">📱</div>
+        <p>Mobiles</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">💻</div>
+        <p>Electronics</p>
+      </div>
+
+      <div class="category">
+        <div class="category-icon">➕</div>
+        <p>More</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Today's Deals 🔥</h2>
+      <span class="see">See all</span>
+    </div>
+
+    <div class="products">
+
+      <div class="product">
+        <div class="product-image">🍚</div>
+        <h3>Premium Rice 5kg</h3>
+        <div>
+          <span class="price">₹299</span>
+          <span class="old-price">₹349</span>
+        </div>
+        <div class="discount">14% OFF • In Stock</div>
+        <button class="add">Add to Cart</button>
+      </div>
+
+      <div class="product">
+        <div class="product-image">🥫</div>
+        <h3>Cooking Oil 1L</h3>
+        <div>
+          <span class="price">₹129</span>
+          <span class="old-price">₹149</span>
+        </div>
+        <div class="discount">13% OFF • In Stock</div>
+        <button class="add">Add to Cart</button>
+      </div>
+
+      <div class="product">
+        <div class="product-image">👕</div>
+        <h3>Men's T-Shirt</h3>
+        <div>
+          <span class="price">₹399</span>
+          <span class="old-price">₹599</span>
+        </div>
+        <div class="discount">33% OFF • In Stock</div>
+        <button class="add">Add to Cart</button>
+      </div>
+
+      <div class="product">
+        <div class="product-image">🎧</div>
+        <h3>Wireless Earbuds</h3>
+        <div>
+          <span class="price">₹799</span>
+          <span class="old-price">₹999</span>
+        </div>
+        <div class="discount">20% OFF • In Stock</div>
+        <button class="add">Add to Cart</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="delivery">
+      <h2>🚚 Bankapur Express</h2>
+      <p style="margin-top:8px;">Fast local delivery in around 45 minutes.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Nearby Shops</h2>
+      <span class="see">See all</span>
+    </div>
+
+    <div class="shop">
+      <div>
+        <b>Local Grocery Store</b>
+        <p>⭐ 4.6 • 0.8 km</p>
+      </div>
+      <span>›</span>
+    </div>
+
+    <div class="shop">
+      <div>
+        <b>Bankapur Fashion</b>
+        <p>⭐ 4.4 • 1.2 km</p>
+      </div>
+      <span>›</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Order Again</h2>
+      <span class="see">View orders</span>
+    </div>
+
+    <div class="shop">
+      <div>
+        <b>🍚 Premium Rice 5kg</b>
+        <p>Previously ordered</p>
+      </div>
+      <button class="add" style="width:auto;">Buy Again</button>
+    </div>
+  </section>
+
+  <nav class="bottom">
+    <div class="nav active">
+      <span class="nav-icon">🏠</span>
+      Home
+    </div>
+
+    <div class="nav">
+      <span class="nav-icon">📂</span>
+      Categories
+    </div>
+
+    <div class="nav">
+      <span class="nav-icon">🛒</span>
+      Cart
+    </div>
+
+    <div class="nav">
+      <span class="nav-icon">📦</span>
+      Orders
+    </div>
+
+    <div class="nav">
+      <span class="nav-icon">👤</span>
+      Profile
+    </div>
+  </nav>
+
+</body>
+</html>
